@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { sequelize, connect, tables } = require('./db');
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -12,11 +13,18 @@ const typeDefs = gql`
     author: String
   }
 
+  type Plant {
+    name: String
+    maxHeight: Int
+    maxWidth: Int
+  }
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books: [Book]
+    plants: [Plant]
   }
 `;
 
@@ -31,19 +39,26 @@ const books = [
   },
 ];
 
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
+async function run() {
+  await connect();
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers });
+  // Resolvers define the technique for fetching the types defined in the
+  // schema. This resolver retrieves books from the "books" array above.
+  const resolvers = {
+    Query: {
+      books: () => books,
+      plants: () => tables.Plant.findAll(),
+    },
+  };
 
-// The `listen` method launches a web server.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+  // The ApolloServer constructor requires two parameters: your schema
+  // definition and your set of resolvers.
+  const server = new ApolloServer({ typeDefs, resolvers });
+
+  // The `listen` method launches a web server.
+  server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
+}
+
+run();
