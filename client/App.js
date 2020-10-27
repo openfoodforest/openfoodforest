@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql, useQuery } from '@apollo/client';
+import { Stage, Layer, Text, Circle } from 'react-konva';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000',
@@ -17,36 +17,27 @@ function getPlants(client) {
       }
     }
   `, { client });
-  if (loading) return <p>Loading ...</p>;
+  if (loading) return null
   if (error) {
     console.log(error);
-    return <p>Error</p>;
+    return null;
   }
 
-  return data.plants.map(plant => 
-    <div key={plant.name}>
-      <p>{plant.name}</p>
-      <p>{plant.maxWidth}</p>
-    </div>
+  return data.plants.map((plant, i) => 
+    <Text text={plant.name} x={10} y={20*i} />
   );
 }
 
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <View style={styles.container}>
-        <Text>{getPlants(client)}</Text>
-        <StatusBar style="auto" />
-      </View>
+      <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Layer>
+          {getPlants(client)}
+          <Circle x={200} y={200} stroke="black" radius={50} />
+       </Layer>
+      </Stage>
     </ApolloProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+//

@@ -12,8 +12,11 @@
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
     "graphql": "^15.3.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "install": "^0.13.0",
+    "konva": "^7.1.4",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-konva": "^17.0.0-0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
     "react-native-web": "~0.13.12"
   },
