@@ -5,39 +5,20 @@ const { sequelize, connect, tables } = require('./db');
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
+  # todo automate this
   type Plant {
     name: String
     maxHeight: Int
     maxWidth: Int
+    color: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  # clients can execute, along with the return type for each.
   type Query {
-    books: [Book]
     plants: [Plant]
   }
 `;
-
-const books = [
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
 
 async function run() {
   await connect();
@@ -46,7 +27,6 @@ async function run() {
   // schema. This resolver retrieves books from the "books" array above.
   const resolvers = {
     Query: {
-      books: () => books,
       plants: () => tables.Plant.findAll(),
     },
   };
