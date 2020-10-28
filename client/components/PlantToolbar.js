@@ -7,6 +7,7 @@ function getPlants(client, currentPlant, setCurrentPlant) {
       plants {
         name
         maxWidth
+        maxHeight
         color
       }
     }

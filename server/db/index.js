@@ -35,7 +35,7 @@ connect = async () => {
             genusName: 'vaccinium',
             speciesName: 'angustifolium',
             maxHeight: 2,
-            maxWidth: 2,
+            maxWidth: 5,
             color: '#43A903',
         });
     } catch (error) {

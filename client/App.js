@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql, useQuery } from '@apollo/client';
 import { Stage, Layer, Text, Circle } from 'react-konva';
 import PlantToolbar from './components/PlantToolbar';
@@ -7,24 +7,16 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-function getPlants(client) {
-  const { loading, error, data } = useQuery(gql`
-    query getPlants {
-      plants {
-        name
-        maxWidth
-      }
+function addPlant(e, currentPlant, drawnPlants, setDrawnPlants) {
+  let plants = drawnPlants.slice();
+  plants.push({plant: currentPlant, x: e.evt.layerX, y: e.evt.layerY});
+  plants = plants.sort((a, b) => {
+    if (a.plant.maxHeight >= b.plant.maxHeight) {
+      return 1;
     }
-  `, { client });
-  if (loading) return null
-  if (error) {
-    console.log(error);
-    return null;
-  }
-
-  return data.plants.map((plant, i) => 
-    <Text text={plant.name} x={10} y={20*i} key={i} />
-  );
+    return -1;
+  });
+  setDrawnPlants(plants);
 }
 
 export default function App() {
@@ -32,12 +24,15 @@ export default function App() {
   const mapWidth = window.innerWidth;
   const mapHeight = window.innerHeight - toolbarHeight;
   const [currentPlant, setCurrentPlant] = useState(null);
+  const [drawnPlants, setDrawnPlants] = useState([]);
+
   return (
     <ApolloProvider client={client}>
-      <Stage width={mapWidth} height={mapHeight}>
+      <Stage width={mapWidth} height={mapHeight} onClick={(e) => {addPlant(e, currentPlant, drawnPlants, setDrawnPlants); }}>
         <Layer>
-          {getPlants(client)}
-          <Circle x={200} y={200} stroke="black" radius={50} />
+          {drawnPlants.map((data, i) => 
+            <Circle key={i} x={data.x} y={data.y} stroke="black" fill={data.plant.color} radius={data.plant.maxWidth} />
+          )}
        </Layer>
       </Stage>
       <PlantToolbar client={client} width={mapWidth} height={toolbarHeight} currentPlant={currentPlant} setCurrentPlant={setCurrentPlant} />
