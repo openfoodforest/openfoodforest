@@ -20,13 +20,23 @@ connect = async () => {
             speciesName: '× sinensis',
             maxHeight: 20,
             maxWidth: 30,
+            color: '#768A3C',
         });
         await tables.Plant.create({
             name: 'Apple',
             genusName: 'malus',
             speciesName: 'domestica',
-            maxHeight: 30,
-            maxWidth: 30,
+            maxHeight: 29,
+            maxWidth: 29,
+            color: '#304E18',
+        });
+        await tables.Plant.create({
+            name: 'Lowbush blueberry',
+            genusName: 'vaccinium',
+            speciesName: 'angustifolium',
+            maxHeight: 2,
+            maxWidth: 5,
+            color: '#43A903',
         });
     } catch (error) {
         console.error('Unable to connect to the database:', error);

@@ -15,6 +15,9 @@ const Plant = {
     },
     maxWidth: {
         type: DataTypes.INTEGER
+    },
+    color: {
+        type: DataTypes.STRING
     }
 };
 
